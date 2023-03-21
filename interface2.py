@@ -307,7 +307,7 @@ class Saque():
         self.janela_saque.mainloop()
 
     def Saque(self):
-        banco = Banco
+        banco = Banco()
         valor = self.saque.get()
         banco.Fazer_saque = valor
         self.mensagem_sucesso.configure(text=(f'Saque de R${valor} feito'))
@@ -346,11 +346,13 @@ class Deposito():
         #criar campos de entrada de textos
         entrada_deposito = ttk.Entry(self.janela_deposito,text='qual o valor que voçe vai depositar: R$',textvariable=self.deposito)
         self.mensagem_sucesso=ttk.Label(text='', style='titulo.TLabel')
+        self.mensagem_saldo=ttk.Label(text='', style='titulo.TLabel')
         #posicionamentos das mensagens
         mensagem_titulo.pack(side='top', pady=(50,0))
         mensagem_deposito.pack(side='top',pady=(150,1))
         entrada_deposito.pack(side='top',pady=5)
         self.mensagem_sucesso.pack(side='top',pady=(150,1))
+        self.mensagem_saldo.pack(side='top',pady=(150,1))
 
 
         # Cria um botão para executa os eventos
@@ -365,11 +367,13 @@ class Deposito():
         self.janela_deposito.mainloop()
 
     def Depositar(self):
-        banco = Banco
+        #banco = Banco()
         valor = self.deposito.get()
-        banco.Fazer_Deposito = valor
+        Banco().Fazer_Deposito = valor
+        saldo= Banco().VerSaldo
         self.mensagem_sucesso.configure(text=(f'deposito de R${valor} feito'))
-        print(f'seu saldo e{Banco.VerSaldo}')          
+        self.mensagem_saldo.configure(text=(f'Seu saldo é de R${saldo} .'))
+                 
         
     def abrir_nova_janela(self):
        self.janela_deposito.destroy()
@@ -424,10 +428,10 @@ class Extrato():
 
     
     def Saldo(self,evento):
-        banco =Banco
+        banco = Banco()
         saldo =banco.VerSaldo
         mensagem_evento = ttk.Label(self.janela_extrato,text=(f'seu saldo é {saldo}'), style='titulo.TLabel',width=50)
-        print(saldo)
+
         mensagem_evento.pack(side='top',pady=(150,1))
         
     
