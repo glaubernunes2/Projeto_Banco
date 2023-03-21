@@ -3,14 +3,14 @@ import sqlite3
 class Criar_tabela():
     conn = sqlite3.connect("usuarios.db")
     cursor = conn.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT, email TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT, email TEXT, cpf TEXT)")
     conn.commit()
     conn.close()
 
-def Criaçao_usuario(usuario, senha,):
+def Criaçao_usuario(usuario, senha,email,cpf):
     conn = sqlite3.connect("usuarios.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users VALUES (?, ?)", (usuario, senha,))
+    cursor.execute("INSERT INTO users VALUES (?, ?,? ,?)", (usuario, senha,email,cpf))
     conn.commit()
     conn.close()
 

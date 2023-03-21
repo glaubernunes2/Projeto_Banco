@@ -2,8 +2,8 @@
 from tkinter import * 
 from tkinter import ttk
 from ttkthemes import ThemedTk
-from validacao import *
-from funcao_s_e import Banco
+
+from funcao import Banco
 import sql
 
 #from funcao import *
@@ -165,7 +165,7 @@ class Cadastro():
         senha = self.senha_criacao.get()
         email = self.email_criacao.get()
         cpf = self.cpf_criacao.get()
-        sql.Criaçao_usuario(usuario, senha,)
+        sql.Criaçao_usuario(usuario, senha,email,cpf)
         self.janelaCadastro.destroy()
         outra_janela = Janelas()
         
