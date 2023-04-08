@@ -6,14 +6,12 @@ from ttkthemes import ThemedTk
 from funcao import Banco
 import sql
 
+
 #from funcao import *
-
-
-       
-
 class Janelas():
 
     def __init__(self,) :
+        super().__init__()
         self.janelaInicio= ThemedTk( theme='equilux')
         # Configuraçao da tela
         self.janelaInicio.title('minha janela')
@@ -64,25 +62,28 @@ class Janelas():
     def abrir_nova_janela(self):
         self.janelaInicio.destroy()
         outra_janela = Cadastro ()
+    
 
     def abrir_loob(self):
         self.janelaInicio.destroy()
-        outra_janela = Loob()
+        outra_janela = Loob(self.usuario_master)
     
     
     def registra(self):
-        usuario = self.Usuario.get()
+        self.usuario_master = self.Usuario.get()
         senha = self.Senha.get()
-        if sql.validar_login(usuario, senha):
+        
+        
+        
+        if sql.validar_login(self.usuario_master, senha):
+           # sql.Saldo(self.usuario_master)
+            
             self.janelaInicio.destroy()
-            outra_janela = Loob()
+            outra_janela = Loob(self.usuario_master, )
+            
         else:
            #colocar uma mini janela de error
            pass
-           
-    
-
-
     
     
 class Cadastro():
@@ -161,24 +162,29 @@ class Cadastro():
     
 
     def registra(self):
+        __saldo = 0
         usuario = self.usuario_criacao.get()
         senha = self.senha_criacao.get()
         email = self.email_criacao.get()
         cpf = self.cpf_criacao.get()
-        sql.Criaçao_usuario(usuario, senha,email,cpf)
+        sql.Criaçao_usuario(usuario, senha,email,cpf,__saldo)
         self.janelaCadastro.destroy()
         outra_janela = Janelas()
         
 
     
 
+
+
     
 
 class Loob():
-    def __init__(self):
+    def __init__(self,usuario_master,):
+        super().__init__()
+        self.usuario_master = usuario_master
         self.janelaloob= ThemedTk( theme='equilux')
         # Configuraçao da tela
-        self.janelaloob.title('loob')
+        self.janelaloob.title(f'bem vindo loob')
         self.janelaloob.state('zoomed')
         self.janelaloob.configure(bg='#2d73b9')
         #frame = Frame(self.janelaloob)
@@ -195,7 +201,7 @@ class Loob():
         #==========ESTILOS===========================
 
         # Cria as Labels para os campos do formulário
-        mesagem_titulo= ttk.Label(self.janelaloob,text='Seja Bem-vindo', style='titulo.TLabel',)
+        mesagem_titulo= ttk.Label(self.janelaloob,text=f'Seja Bem-vindo {self.usuario_master} ', style='titulo.TLabel',)
 
         # Cria os campos de entrada de texto para o formulário
 
@@ -247,22 +253,26 @@ class Loob():
     
     def abrir_saque(self):
        self.janelaloob.destroy()
-       outra_janela = Saque()
+       outra_janela = Saque(self.usuario_master)
     
     def abrir_deposito(self):
        self.janelaloob.destroy()
-       outra_janela = Deposito()
+       outra_janela = Deposito(self.usuario_master,)
     
     #so tirar dos comentarios quadno fazer a janela saldo
     def abrir_saldo(self):
+       print(sql.Usuario)
        self.janelaloob.destroy()
-       outra_janela = Extrato()
+       outra_janela = Extrato(self.usuario_master,)
+       
  
 
 
 
 class Saque():
-    def __init__(self):
+    def __init__(self,usuario_master):
+        super().__init__()
+        self.usuario_master = usuario_master
         self.janela_saque= ThemedTk( theme='equilux')
         self.janela_saque.state('zoomed')
         self.janela_saque.title('Saque')
@@ -307,12 +317,14 @@ class Saque():
         self.janela_saque.mainloop()
 
     def Saque(self):
-        banco = Banco()
+        
         valor = self.saque.get()
-        banco.Fazer_saque = valor
+        sql.Saque_saldo(self.usuario_master,valor)
+        retorno= sql.Saldo(self.usuario_master)
+        self.saldo = retorno.retorno()
         self.mensagem_sucesso.configure(text=(f'Saque de R${valor} feito'))
         
-    def abrir_nova_janela(self):
+    def abrir_nova_janela(self,):
         self.janela_saque.destroy()
         outra_janela = Loob()
     def volta_janela(self,evento):
@@ -320,7 +332,9 @@ class Saque():
        outra_janela = Loob()
 
 class Deposito():
-    def __init__(self):
+    def __init__(self,usuario_master,):
+        super().__init__()
+        self.usuario_master = usuario_master
         self.janela_deposito= ThemedTk( theme='equilux')
         self.janela_deposito.state('zoomed')
         self.janela_deposito.title('Deposito')
@@ -367,25 +381,31 @@ class Deposito():
         self.janela_deposito.mainloop()
 
     def Depositar(self):
-        #banco = Banco()
         valor = self.deposito.get()
-        Banco().Fazer_Deposito = valor
-        saldo= Banco().VerSaldo
+
+        sql.Deposito_saldo(self.usuario_master,valor)
+        retorno= sql.Saldo(self.usuario_master)
+        self.saldo = retorno.retorno()
         self.mensagem_sucesso.configure(text=(f'deposito de R${valor} feito'))
-        self.mensagem_saldo.configure(text=(f'Seu saldo é de R${saldo} .'))
+        self.mensagem_saldo.configure(text=(f'Seu saldo é de R$ {self.saldo}.'))
                  
         
     def abrir_nova_janela(self):
        self.janela_deposito.destroy()
-       outra_janela = Loob()
+       outra_janela = Loob(self.usuario_master)
+       
     def volta_janela(self,evento):
        self.janela_deposito.destroy()
-       outra_janela = Loob()
+       outra_janela = Loob(self.usuario_master)
 
 #falta saber como voçe pegar pra ver a movimentação
 
 class Extrato():
-    def __init__(self):
+    def __init__(self,usuario_master,):
+        super().__init__()
+        self.usuario_master = usuario_master
+    
+        #self.usuario_master = self.Usuario.get()
         self.janela_extrato= ThemedTk( theme='equilux')
         self.janela_extrato.geometry('500x300')
         self.janela_extrato.state('zoomed')
@@ -403,7 +423,7 @@ class Extrato():
         self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
         #==========ESTILOS===========================
         # Cria as Labels para os campos do formulário
-        mensagem_titulo= ttk.Label(self.janela_extrato,text='Aperte ENTER pra ver po saldo',style='titulo.TLabel')
+        mensagem_titulo= ttk.Label(self.janela_extrato,text=f'{self.usuario_master} aperte ENTER pra ver po saldo',style='titulo.TLabel')
         
         #criar variaveis
         
@@ -421,16 +441,16 @@ class Extrato():
         button_sair.pack(side='bottom',padx=(1000,1))
         #Atalhos de teclas
         self.janela_extrato.bind('<Escape>', self.volta_janela)
-        self.janela_extrato.bind('<Return>', self.Saldo)
+        self.janela_extrato.bind('<Return>', self.ver_saldo)
 
 
         self.janela_extrato.mainloop()
 
     
-    def Saldo(self,evento):
-        banco = Banco()
-        saldo =banco.VerSaldo
-        mensagem_evento = ttk.Label(self.janela_extrato,text=(f'seu saldo é {saldo}'), style='titulo.TLabel',width=50)
+    def ver_saldo(self,evento):
+        retorno= sql.Saldo(self.usuario_master)
+        self.saldo = retorno.retorno()
+        mensagem_evento = ttk.Label(self.janela_extrato,text=(f'seu saldo é {self.saldo}'), style='titulo.TLabel',width=50)
 
         mensagem_evento.pack(side='top',pady=(150,1))
         
@@ -438,10 +458,10 @@ class Extrato():
     
     def abrir_nova_janela(self):
        self.janela_extrato.destroy()
-       outra_janela = Loob()
+       outra_janela = Loob(self.usuario_master,)
     def volta_janela(self,evento):
        self.janela_extrato.destroy()
-       outra_janela = Loob()
+       outra_janela = Loob(self.usuario_master,)
 
 
 

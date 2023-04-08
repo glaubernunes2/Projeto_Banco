@@ -1,9 +1,10 @@
+import sql
 
 #Aqui vai fica as funções pro banco
 class Banco():
     def __init__(self,):
         self.__saldo = 0
-        
+       
 
     
         
@@ -11,6 +12,7 @@ class Banco():
     @property
     def VerSaldo(self,): 
         return self.__saldo
+
          
     @property
     def Fazer_Deposito(self):
@@ -18,6 +20,8 @@ class Banco():
     @Fazer_Deposito.setter
     def Fazer_Deposito(self,valor):
         self.__saldo += valor
+        
+   # @Fazer_Deposito.getter
      
         
         
@@ -31,7 +35,8 @@ class Banco():
     def Fazer_saque(self,valor):
         if self.__saldo >= valor:
             self.__saldo -= valor
-            return self.__saldo
+            sql.Update(self.__saldo,usuario)
+                
            
             
         else:
