@@ -1,5 +1,5 @@
 #Vai ser o inity
-from interface2 import *
+from interface import *
 from funcao import *
 
 

@@ -7,19 +7,18 @@ from funcao import Banco
 import sql
 
 
-#from funcao import *
 class Janelas():
 
     def __init__(self,) :
         super().__init__()
         # vairaveis universais nessa class
 
-        #ttk
+       # Configuraçao da tela
         self.janelaInicio= ThemedTk( theme='equilux')
-        # Configuraçao da tela
         self.janelaInicio.title('minha janela')
         self.janelaInicio.state('zoomed')
         self.janelaInicio.configure(bg='#2d73b9')
+       
         #==========ESTILOS===========================
         fonte = ('arial,20')
         cor_fundo = '#2d73b9'
@@ -31,12 +30,12 @@ class Janelas():
         self.estilo.configure('butao.TButton',borderwidth=50,padding=6, relief='flat',background='red')
         self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
         #==========ESTILOS===========================
-        frame = Frame(self.janelaInicio)
 
         # Cria as Labels para os campos do formulário
         mesagem_titulo= ttk.Label(self.janelaInicio,text='Banco Infinity', style='titulo.TLabel',relief='solid')
         mesagem_email = ttk.Label(self.janelaInicio, text='Email',style='mesagem.TLabel')
         mesagem_senha = ttk.Label(self.janelaInicio, text='Senha',style='mesagem.TLabel')
+        
         #atribuição de variavel
         self.Usuario = StringVar()
         self.Senha = StringVar()
@@ -84,12 +83,9 @@ class Janelas():
         self.janelaInicio.destroy()
         outra_janela = Loob(self.usuario_master)
     
-    
     def registra(self):
         self.usuario_master = self.Usuario.get()
         senha = self.Senha.get()
-        
-        
         
         if sql.validar_login(self.usuario_master, senha):           
             self.janelaInicio.destroy()
@@ -104,13 +100,14 @@ class Cadastro():
     def __init__(self,):
         # vairaveis universais nessa class
         
-        #ttk
+        # Configuraçao da tela
         self.janelaCadastro= ThemedTk(theme='equilux')
+       
         # Configuraçao da tela
         self.janelaCadastro.title('cadastro')
         self.janelaCadastro.state('zoomed')
         self.janelaCadastro.configure(bg='#2d73b9')
-        frame = Frame(self.janelaCadastro)
+        
         #==========ESTILOS===========================
         cor_fundo = '#2d73b9'
         cor_letra =  'white'
@@ -138,7 +135,6 @@ class Cadastro():
         self.senha_criacao1 = StringVar()
         self.senha_criacao2 = StringVar()
         self.email_criacao = StringVar()
-
 
         # Cria os campos de entrada de texto para o formulário
         entrada_nome = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.usuario_criacao)
@@ -175,12 +171,11 @@ class Cadastro():
     def abrir_nova_janela(self):
        self.janelaCadastro.destroy()
        outra_janela = Janelas()
+    
     def volta_janela(self,evento):
        self.janelaCadastro.destroy()
        outra_janela = Janelas()
     
-    
-
     def registra(self):
         __saldo = 0
         usuario = self.usuario_criacao.get()
@@ -204,7 +199,7 @@ class Cadastro():
             self.resultado_label.config(text="Endereço de cpf inválido")
 
         else:
-            sql.Criaçao_usuario(usuario, senha,email,cpf,__saldo)
+            sql.Criaçao_usuario(usuario, senha1,email,cpf,__saldo)
             self.janelaCadastro.destroy()
             outra_janela = Janelas()
         
@@ -220,13 +215,13 @@ class Loob():
         super().__init__()
         # vairaveis universais nessa class
         self.usuario_master = usuario_master
-        #ttk
-        self.janelaloob= ThemedTk( theme='equilux')
+        
         # Configuraçao da tela
+        self.janelaloob= ThemedTk( theme='equilux')
         self.janelaloob.title(f'bem vindo loob')
         self.janelaloob.state('zoomed')
         self.janelaloob.configure(bg='#2d73b9')
-        #frame = Frame(self.janelaloob)
+        
         #==========ESTILOS===========================
         cor_fundo = '#2d73b9'
         cor_letra =  'white'
@@ -245,19 +240,15 @@ class Loob():
         # Cria os campos de entrada de texto para o formulário
 
         # Posiciona as Labels e os campos de entrada usando o método pack
-        
         mesagem_titulo.pack(side='top', pady=(150,0))
         
         # Cria um botão para saque
-        
         button_saque = ttk.Button(self.janelaloob, text='Saque',style='botao.TButton', command=self.abrir_saque)
 
         # Cria um botão para deposito
-       
         button_deposito = ttk.Button(self.janelaloob, text='Deposito',style='botao.TButton', command=self.abrir_deposito)
 
         # Cria um botão para colsutar saldo
-       
         button_saldo = ttk.Button(self.janelaloob, text='Saldo',style='botao.TButton', command=self.abrir_saldo)
         
         #criar um botão pra modificar as informações
@@ -267,7 +258,6 @@ class Loob():
         button_sair = ttk.Button(self.janelaloob,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
 
         # Posicinamentos dos botões
-       
         button_saldo.pack(side='top',padx=1,pady=(150,1),)
         button_deposito.pack(side='top',padx=1,pady=(30,1),)
         button_saque.pack(side='top',padx=1,pady=(30,1),)
@@ -284,8 +274,7 @@ class Loob():
     def volta_janela(self,evento):
        self.janelaloob.destroy()
        outra_janela = Janelas()    
-        
-        
+         
     def abrir_nova_janela(self):
        self.janelaloob.destroy()
        outra_janela = Janelas()
@@ -293,6 +282,7 @@ class Loob():
     def abrir_saque(self):
        self.janelaloob.destroy()
        outra_janela = Saque(self.usuario_master)
+   
     def abrir_atualização(self):
        self.janelaloob.destroy()
        outra_janela = Atualizar_informacao(self.usuario_master)
@@ -300,8 +290,7 @@ class Loob():
     def abrir_deposito(self):
        self.janelaloob.destroy()
        outra_janela = Deposito(self.usuario_master,)
-    
-    #so tirar dos comentarios quadno fazer a janela saldo
+
     def abrir_saldo(self):
        self.janelaloob.destroy()
        outra_janela = Extrato(self.usuario_master,)
@@ -315,11 +304,13 @@ class Saque():
         super().__init__()
         # vairaveis universais nessa class
         self.usuario_master = usuario_master
-        #ttk
+        
+        # Configuraçao da tela
         self.janela_saque= ThemedTk( theme='equilux')
         self.janela_saque.state('zoomed')
         self.janela_saque.title('Saque')
         self.janela_saque.configure(bg='#2d73b9')
+        
         #==========ESTILOS===========================
         cor_fundo = '#2d73b9'
         cor_letra =  'white'
@@ -331,22 +322,24 @@ class Saque():
         self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
         self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
         #==========ESTILOS===========================
+        
         # Cria as Labels para os campos do formulário
         mensagem_titulo= ttk.Label(self.janela_saque,text='Saque',style='titulo.TLabel')
         mensagem_saque = ttk.Label(self.janela_saque,text='qual o valor que voçe vai sacar: R$',style='mesagem.TLabel')
         self.mensagem_sucesso=ttk.Label(text='', style='mensagem.TLabel')
+        
         #criar variaveis
         self.saque = DoubleVar()
        
         #criar campos de entrada de textos
         entrada_saque = ttk.Entry(self.janela_saque,width=10, textvariable=self.saque)
 
-
         #posicionamentos das mensagens
         mensagem_titulo.pack(side='top', pady=(50,0))
         mensagem_saque.pack(side='top',pady=(150,1))
         entrada_saque.pack(side='top',pady=5)
         self.mensagem_sucesso.pack(side='top',pady=(150,1))
+        
         # Cria um botão para executa os eventos
         botao_saque= ttk.Button(self.janela_saque,text='Sacar',command=self.Saque)
         botao_saque.pack(side='top',padx=1,pady=(15,1))
@@ -360,7 +353,6 @@ class Saque():
         self.janela_saque.mainloop()
 
     def Saque(self):
-        
         valor = self.saque.get()
         sql.Saque_saldo(self.usuario_master,valor)
         retorno= sql.Saldo(self.usuario_master)
@@ -370,6 +362,7 @@ class Saque():
     def abrir_nova_janela(self,):
         self.janela_saque.destroy()
         outra_janela = Loob(self.usuario_master)
+    
     def volta_janela(self,evento):
        self.janela_saque.destroy()
        outra_janela = Loob(self.usuario_master)
@@ -379,7 +372,8 @@ class Deposito():
         super().__init__()
         # vairaveis universais nessa class
         self.usuario_master = usuario_master
-        #ttk
+        
+        # Configuraçao da tela
         self.janela_deposito= ThemedTk( theme='equilux')
         self.janela_deposito.state('zoomed')
         self.janela_deposito.title('Deposito')
@@ -396,16 +390,19 @@ class Deposito():
         self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
         self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
         #==========ESTILOS===========================
+       
         # Cria as Labels para os campos do formulário
         mensagem_titulo= ttk.Label(self.janela_deposito,text='deposito',style='titulo.TLabel')
         mensagem_deposito = ttk.Label(self.janela_deposito,text='qual o valor que voçe vai depositar: R$',style='mesagem.TLabel')
 
         #criar variaveis
         self.deposito = DoubleVar()
+        
         #criar campos de entrada de textos
         entrada_deposito = ttk.Entry(self.janela_deposito,text='qual o valor que voçe vai depositar: R$',textvariable=self.deposito)
         self.mensagem_sucesso=ttk.Label(text='', style='titulo.TLabel')
         self.mensagem_saldo=ttk.Label(text='', style='titulo.TLabel')
+        
         #posicionamentos das mensagens
         mensagem_titulo.pack(side='top', pady=(50,0))
         mensagem_deposito.pack(side='top',pady=(150,1))
@@ -419,6 +416,7 @@ class Deposito():
         botao_deposito.pack(side='top',padx=1,pady=(15,1))
         button_sair = ttk.Button(self.janela_deposito,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
         button_sair.pack(side='bottom',padx=(1000,1))
+        
         #Atalhos de teclas
         self.janela_deposito.bind('<Escape>', self.volta_janela)
 
@@ -427,14 +425,12 @@ class Deposito():
 
     def Depositar(self):
         valor = self.deposito.get()
-
         sql.Deposito_saldo(self.usuario_master,valor)
         retorno= sql.Saldo(self.usuario_master)
         self.saldo = retorno.retorno()
         self.mensagem_sucesso.configure(text=(f'deposito de R${valor} feito'))
         self.mensagem_saldo.configure(text=(f'Seu saldo é de R$ {self.saldo}.'))
-                 
-        
+                    
     def abrir_nova_janela(self):
        self.janela_deposito.destroy()
        outra_janela = Loob(self.usuario_master)
@@ -443,20 +439,19 @@ class Deposito():
        self.janela_deposito.destroy()
        outra_janela = Loob(self.usuario_master)
 
-#falta saber como voçe pegar pra ver a movimentação
-
 class Extrato():
     def __init__(self,usuario_master,):
         super().__init__()
         # vairaveis universais nessa class
         self.usuario_master = usuario_master
     
-        #ttk
+        # Configuraçao da tela
         self.janela_extrato= ThemedTk( theme='equilux')
         self.janela_extrato.geometry('500x300')
         self.janela_extrato.state('zoomed')
         self.janela_extrato.title('saldo')
         self.janela_extrato.configure(bg='#2d73b9')
+        
         #==========ESTILOS===========================
         cor_fundo = '#2d73b9'
         cor_letra =  'white'
@@ -468,23 +463,21 @@ class Extrato():
         self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
         self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
         #==========ESTILOS===========================
+        
         # Cria as Labels para os campos do formulário
         mensagem_titulo= ttk.Label(self.janela_extrato,text=f'{self.usuario_master} aperte ENTER pra ver po saldo',style='titulo.TLabel')
         
         #criar variaveis
         
-
         #criar campos de entrada de textos
 
         #posicionamentos das mensagens
-        
         mensagem_titulo.pack()
 
-        # Cria um botão para executa os eventos
-        
-        
+        # Cria um botão para executa os eventos        
         button_sair = ttk.Button(self.janela_extrato,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
         button_sair.pack(side='bottom',padx=(1000,1))
+       
         #Atalhos de teclas
         self.janela_extrato.bind('<Escape>', self.volta_janela)
         self.janela_extrato.bind('<Return>', self.ver_saldo)
@@ -497,7 +490,6 @@ class Extrato():
         retorno= sql.Saldo(self.usuario_master)
         self.saldo = retorno.retorno()
         mensagem_evento = ttk.Label(self.janela_extrato,text=(f'seu saldo é {self.saldo}'), style='titulo.TLabel',width=50)
-
         mensagem_evento.pack(side='top',pady=(150,1))
         
     
@@ -505,6 +497,7 @@ class Extrato():
     def abrir_nova_janela(self):
        self.janela_extrato.destroy()
        outra_janela = Loob(self.usuario_master,)
+    
     def volta_janela(self,evento):
        self.janela_extrato.destroy()
        outra_janela = Loob(self.usuario_master,)
@@ -518,12 +511,14 @@ class Atualizar_informacao():
         self.cpf_master = retorno.retorno_cpf()
         self.email_master = retorno.retorno_email()
         self.senha_master = retorno.retorno_senha()
-        #ttk
+        
+        # Configuraçao da tela
         self.janela_atualizacao= ThemedTk( theme='equilux')
         self.janela_atualizacao.geometry('500x300')
         self.janela_atualizacao.state('zoomed')
         self.janela_atualizacao.title('Atualização')
         self.janela_atualizacao.configure(bg='#2d73b9')
+       
         #==========ESTILOS===========================
         cor_fundo = '#2d73b9'
         cor_letra =  'white'
@@ -535,6 +530,7 @@ class Atualizar_informacao():
         self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
         self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
         #==========ESTILOS===========================
+        
         # Cria as Labels para os campos do formulário
         mensagem_titulo= ttk.Label(self.janela_atualizacao,text=f'hey {self.usuario_master} digite as informações que voçê quer modificar. ',style='titulo.TLabel')
         mesagem_cpf = ttk.Label(self.janela_atualizacao,text='Digite o seu novo cpf', style='mesagem.TLabel')
@@ -551,17 +547,15 @@ class Atualizar_informacao():
         self.senha_modificado = StringVar()
 
         #criar campos de entrada de textos
-        #entrada_nome = ttk.Entry(self.janela_atualizacao,width=30,textvariable=self.usuario_criacao)
         entrada_cpf = ttk.Entry(self.janela_atualizacao,width=30,textvariable=self.cpf_modificado)
         entrada_email = ttk.Entry(self.janela_atualizacao,width=30,textvariable=self.email_modificado)
         entrada_senha = ttk.Entry(self.janela_atualizacao,width=30,textvariable=self.senha_modificado)
-        #posicionamentos das mensagens
         
+        #posicionamentos das mensagens       
         mensagem_titulo.pack(side='top', pady=(50,0))
         mostrar_cpf.pack(side='top',pady=(150,1))
         mostrar_email.pack(side='top',pady=(5,1))
         self.mostrar_senha.pack(side='top',pady=(5,1))
-        '''entrada_nome.pack(side='top',pady=5)'''
         mesagem_cpf.pack(side='top',pady=(50,1))
         entrada_cpf.pack(side='top')
         mesagem_email.pack(side='top',pady=5) 
@@ -590,6 +584,7 @@ class Atualizar_informacao():
         senha = self.senha_modificado.get()
         email = self.email_modificado.get()
         cpf = self.cpf_modificado.get()
+        padraoEmail = r"[^@]+@[^@]+\.[^@]+"
         if len(senha) < 6:
             self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 6 caracteres")
         elif not any(char.isdigit() for char in senha):
@@ -600,7 +595,6 @@ class Atualizar_informacao():
             self.resultado_label.config(text="Endereço de e-mail inválido")
         elif len(cpf) > 11 or len(cpf) < 11:
             self.resultado_label.config(text="Endereço de cpf inválido")
-
         else:
             sql.Atualizar_info(senha,email,cpf,self.usuario_master)
             print('atualizado')
@@ -610,13 +604,8 @@ class Atualizar_informacao():
     def abrir_nova_janela(self):
        self.janela_atualizacao.destroy()
        outra_janela = Loob(self.usuario_master,)
+    
     def volta_janela(self,evento):
        self.janela_atualizacao.destroy()
        outra_janela = Loob(self.usuario_master,)
    
-
-
-
-if __name__ == '__main__':
-    janela = Janelas()
-    
