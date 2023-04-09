@@ -37,27 +37,13 @@ class Update():
         conn.commit()
         conn.close()
 
-
-class Usuario():
-    def __init__(self,usuario):
+class Atualizar_info():
+    def __init__(self,senha, email,cpf,usuario):
         conn = sqlite3.connect("banco.db")
         cursor = conn.cursor()
-
-        cursor.execute("SELECT usuario FROM clientes WHERE usuario=?",(usuario,) )
-
-        # Obtenha o resultado da consulta
-        resultado = cursor.fetchone()
-
-        # Imprima o valor da chave primária
-        self.a= print(resultado[0])
+        cursor.execute("UPDATE clientes SET senha= ?, email=? , cpf = ? WHERE usuario=?", (senha,email,cpf,usuario,))
+        conn.commit()
         conn.close()
-        #return resultado[0]
-    
-    
-   # def salvar(self):
-   #     return self.a
-
-
 
 
 class Saldo():
@@ -113,6 +99,26 @@ class Deposito_saldo():
         
         conn.close()
        
+class informações():
+    def __init__(self,usuario):
+
+        conn = sqlite3.connect("banco.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT senha ,email, cpf FROM clientes WHERE usuario=?", (usuario,))
+        resultado = cursor.fetchone()
+        self.senha = str(resultado[0])
+        self.email =str(resultado[1])
+        self.cpf = str(resultado[2])
+        conn.close()
+
+    def retorno_email(self):
+        return self.email
+
+    def retorno_cpf(self):
+        return self.cpf
+    
+    def retorno_senha(self):
+        return self.senha
 
         
             
