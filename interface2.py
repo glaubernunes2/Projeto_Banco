@@ -2,7 +2,7 @@
 from tkinter import * 
 from tkinter import ttk
 from ttkthemes import ThemedTk
-
+import re
 from funcao import Banco
 import sql
 
@@ -130,11 +130,13 @@ class Cadastro():
         mesagem_email = ttk.Label(self.janelaCadastro, text='Digte seu Email',style='mesagem.TLabel')
         mesagem_senha = ttk.Label(self.janelaCadastro, text='Digite uma senha',style='mesagem.TLabel')
         mesagem_senha2 = ttk.Label(self.janelaCadastro, text='Digite novamente a senha',style='mesagem.TLabel')
+        self.resultado_label = ttk.Label(self.janelaCadastro, text="")
        
         #criar variaveis
         self.cpf_criacao = StringVar()
         self.usuario_criacao = StringVar()
-        self.senha_criacao = StringVar()
+        self.senha_criacao1 = StringVar()
+        self.senha_criacao2 = StringVar()
         self.email_criacao = StringVar()
 
 
@@ -142,8 +144,8 @@ class Cadastro():
         entrada_nome = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.usuario_criacao)
         entrada_cpf = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.cpf_criacao)
         entrada_email = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.email_criacao)
-        entrada_senha = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.senha_criacao)
-        entrada_senha2 = ttk.Entry(self.janelaCadastro,width=30,)
+        entrada_senha = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.senha_criacao1)
+        entrada_senha2 = ttk.Entry(self.janelaCadastro,width=30,textvariable=self.senha_criacao2)
 
         # Posiciona as Labels e os campos de entrada usando o método pack
         mesagem_titulo.pack(side='top', pady=(50,0))
@@ -157,12 +159,14 @@ class Cadastro():
         entrada_senha.pack(side='top',)
         mesagem_senha2.pack(side='top',pady=5)
         entrada_senha2.pack(side='top',pady=5)
-       
+        self.resultado_label.pack(side='top',pady=5)
+        
         # Cria um botão para salvar os dados do formulário
         button_enviar = ttk.Button(self.janelaCadastro, text='Enviar',command=self.registra)
         button_enviar.pack(side='top',padx=1,pady=(15,1),)
         button_sair = ttk.Button(self.janelaCadastro,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
         button_sair.pack(side='bottom',padx=(1000,1))
+        
         #Atalhos de teclas
         self.janelaCadastro.bind('<Escape>', self.volta_janela)
 
@@ -180,12 +184,29 @@ class Cadastro():
     def registra(self):
         __saldo = 0
         usuario = self.usuario_criacao.get()
-        senha = self.senha_criacao.get()
+        senha1 = self.senha_criacao1.get()
+        senha2 = self.senha_criacao2.get()
         email = self.email_criacao.get()
         cpf = self.cpf_criacao.get()
-        sql.Criaçao_usuario(usuario, senha,email,cpf,__saldo)
-        self.janelaCadastro.destroy()
-        outra_janela = Janelas()
+        padraoEmail = r"[^@]+@[^@]+\.[^@]+"
+
+        if len(senha1) < 6:
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 6 caracteres")
+        elif not any(char.isdigit() for char in senha1):
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 1 número")
+        elif not any(char.isupper() for char in senha1):
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 1 letra maiúscula")
+        elif senha1 != senha2:
+            self.resultado_label.config(text="Senha inválida: a senha esta difrente da primeira")
+        elif not re.match(padraoEmail, email):
+            self.resultado_label.config(text="Endereço de e-mail inválido")
+        elif len(cpf) > 11 or len(cpf) < 11:
+            self.resultado_label.config(text="Endereço de cpf inválido")
+
+        else:
+            sql.Criaçao_usuario(usuario, senha,email,cpf,__saldo)
+            self.janelaCadastro.destroy()
+            outra_janela = Janelas()
         
 
     
@@ -522,9 +543,9 @@ class Atualizar_informacao():
         mostrar_cpf = ttk.Label(self.janela_atualizacao,text=f'o seu cpf é {self.cpf_master}', style='mesagem.TLabel')
         mostrar_email = ttk.Label(self.janela_atualizacao,text=f'o seu email é {self.email_master}', style='mesagem.TLabel')
         self.mostrar_senha = ttk.Label(self.janela_atualizacao,text=f'A aperter ENTER caso queirar ver sua senha', style='mesagem.TLabel')
-        #criar variaveis
-       
+        self.resultado_label = ttk.Label(self.janela_atualizacao, text="")
         
+        #criar variaveis
         self.cpf_modificado = StringVar()
         self.email_modificado = StringVar()
         self.senha_modificado = StringVar()
@@ -541,18 +562,19 @@ class Atualizar_informacao():
         mostrar_email.pack(side='top',pady=(5,1))
         self.mostrar_senha.pack(side='top',pady=(5,1))
         '''entrada_nome.pack(side='top',pady=5)'''
-        mesagem_cpf.pack(side='top',pady=(150,1))
+        mesagem_cpf.pack(side='top',pady=(50,1))
         entrada_cpf.pack(side='top')
         mesagem_email.pack(side='top',pady=5) 
         entrada_email.pack(side='top',)
         mesagem_senha.pack(side='top',pady=5)
         entrada_senha.pack(side='top',)
-
+        self.resultado_label.pack(side='top',pady=5)
+        
         # Cria um botão para executa os eventos
         button_atualizar = ttk.Button(self.janela_atualizacao,text='Atualizar',style='sair.TButton',width=30,cursor='hand2', command=self.atualizar)
-        button_atualizar.pack(side='top',pady=(100,1))
+        button_atualizar.pack(side='top',pady=(10,1))
         button_sair = ttk.Button(self.janela_atualizacao,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
-        button_sair.pack(side='bottom',padx=(1,1))
+        button_sair.pack(side='bottom',padx=(1000,1))
        
         #Atalhos de teclas
         self.janela_atualizacao.bind('<Escape>', self.volta_janela)
@@ -568,11 +590,22 @@ class Atualizar_informacao():
         senha = self.senha_modificado.get()
         email = self.email_modificado.get()
         cpf = self.cpf_modificado.get()
-        print(senha,cpf,email)
-        sql.Atualizar_info(senha,email,cpf,self.usuario_master)
-        print('atualizado')
-        self.janela_atualizacao.destroy()
-        outra_janela = Loob(self.usuario_master, )
+        if len(senha) < 6:
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 6 caracteres")
+        elif not any(char.isdigit() for char in senha):
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 1 número")
+        elif not any(char.isupper() for char in senha):
+            self.resultado_label.config(text="Senha inválida: a senha deve ter pelo menos 1 letra maiúscula")
+        elif not re.match(padraoEmail, email):
+            self.resultado_label.config(text="Endereço de e-mail inválido")
+        elif len(cpf) > 11 or len(cpf) < 11:
+            self.resultado_label.config(text="Endereço de cpf inválido")
+
+        else:
+            sql.Atualizar_info(senha,email,cpf,self.usuario_master)
+            print('atualizado')
+            self.janela_atualizacao.destroy()
+            outra_janela = Loob(self.usuario_master, )
         
     def abrir_nova_janela(self):
        self.janela_atualizacao.destroy()
