@@ -33,7 +33,7 @@ class Janelas():
 
         # Cria as Labels para os campos do formulário
         mesagem_titulo= ttk.Label(self.janelaInicio,text='Banco Infinity', style='titulo.TLabel',relief='solid')
-        mesagem_email = ttk.Label(self.janelaInicio, text='Email',style='mesagem.TLabel')
+        mesagem_email = ttk.Label(self.janelaInicio, text='Usuario',style='mesagem.TLabel')
         mesagem_senha = ttk.Label(self.janelaInicio, text='Senha',style='mesagem.TLabel')
         
         #atribuição de variavel
@@ -566,10 +566,13 @@ class Atualizar_informacao():
         
         # Cria um botão para executa os eventos
         button_atualizar = ttk.Button(self.janela_atualizacao,text='Atualizar',style='sair.TButton',width=30,cursor='hand2', command=self.atualizar)
-        button_atualizar.pack(side='top',pady=(10,1))
+        button_atualizar.pack()
+        button_excluir = ttk.Button(self.janela_atualizacao,text='Excluir perfil',width=50,command=self.excluir)
+        button_excluir.pack(side='top',pady=(10,1))
         button_sair = ttk.Button(self.janela_atualizacao,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
         button_sair.pack(side='bottom',padx=(1000,1))
-       
+        
+
         #Atalhos de teclas
         self.janela_atualizacao.bind('<Escape>', self.volta_janela)
         self.janela_atualizacao.bind('<Return>', self.senha)
@@ -600,7 +603,11 @@ class Atualizar_informacao():
             print('atualizado')
             self.janela_atualizacao.destroy()
             outra_janela = Loob(self.usuario_master, )
-        
+
+    def excluir(self):
+       self.janela_atualizacao.destroy()
+       outra_janela = Apagar(self.usuario_master,)
+
     def abrir_nova_janela(self):
        self.janela_atualizacao.destroy()
        outra_janela = Loob(self.usuario_master,)
@@ -609,3 +616,58 @@ class Atualizar_informacao():
        self.janela_atualizacao.destroy()
        outra_janela = Loob(self.usuario_master,)
    
+
+class Apagar():
+    def __init__(self,usuario_master,):
+        super().__init__()
+        # vairaveis universais nessa class
+        self.usuario_master = usuario_master
+
+        # Configuraçao da tela
+        self.janela_drop= ThemedTk( theme='equilux')
+        self.janela_drop.geometry('500x300')
+        self.janela_drop.title('Apagar perfil')
+        self.janela_drop.configure(bg='#2d73b9')
+       
+        #==========ESTILOS===========================
+        cor_fundo = '#2d73b9'
+        cor_letra =  'white'
+        fonte = ('arial',30)
+        self.estilo = ttk.Style()
+        self.estilo.configure('titulo.TLabel',font=('ariel',50),background='#C64132',foreground=cor_letra,)
+        self.estilo.configure('mesagem.TLabel',font=fonte,background=cor_fundo, foreground=cor_letra)
+        self.estilo.configure('butao.TButton',borderwidth=50,padding=6, relief='flat',background='red')
+        self.estilo.map('butao.TButton',foreground=[('pressed','#ffffff'), ('active','#000000')],background=[('pressed', '!disabled', 'red'), ('active', '#C64132')], )
+        self.estilo.configure("sair.TButton",font = fonte, background= 'red', padding=20)
+        #==========ESTILOS===========================
+        
+        # Cria as Labels para os campos do formulário
+        mensagem_titulo= ttk.Label(self.janela_drop,text=f'Voçe tem certeza quer excluir?',style='titulo.TLabel')
+
+        #posicionamentos das mensagens       
+        mensagem_titulo.pack(side='top', pady=(50,0))
+
+        # Cria um botão para executa os eventos
+        button_apagar = ttk.Button(self.janela_drop,text='SIM',style='sair.TButton',width=100,cursor='hand2', command=self.drop)
+        button_apagar.pack(side='top',pady=(10,1))
+        button_sair = ttk.Button(self.janela_drop,text='Sair',style='sair.TButton',width=30,cursor='hand2', command=self.abrir_nova_janela)
+        button_sair.pack(side='bottom',padx=(1000,1))
+       
+        #Atalhos de teclas
+        self.janela_drop.bind('<Escape>', self.volta_janela)
+
+        self.janela_drop.mainloop()
+
+    def drop(self):
+        
+        if sql.Apagar(self.usuario_master):
+            self.janela_drop.destroy()
+            outra_janela = Janelas()
+
+    def abrir_nova_janela(self):
+       self.janela_drop.destroy()
+       outra_janela = Loob(self.usuario_master,)
+    
+    def volta_janela(self,evento):
+       self.janela_drop.destroy()
+       outra_janela = Loob(self.usuario_master,)

@@ -1,4 +1,4 @@
-#Vai ser o inity
+
 from interface import *
 from funcao import *
 

@@ -119,6 +119,15 @@ class informações():
     
     def retorno_senha(self):
         return self.senha
+    
+class Apagar():
+    def __init__(self,usuario):
+        #falta consertar essa parte
+        conn = sqlite3.connect("banco.db")
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM clientes WHERE usuario=?",(usuario))
+        conn.commit()
+        conn.close()
 
         
             
